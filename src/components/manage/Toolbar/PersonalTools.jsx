@@ -134,7 +134,7 @@ class PersonalTools extends Component {
         </header>
         <div className={cx('avatar', { default: !this.props.user.portrait })}>
           {this.props.user.portrait ? (
-            <img
+            <Image
               src={flattenToAppURL(this.props.user.portrait)}
               alt={this.props.intl.formatMessage(messages.userAvatar)}
             />
