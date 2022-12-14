@@ -1,5 +1,6 @@
 import '@testing-library/cypress/add-commands';
 import { getIfExists } from '../helpers';
+import { ploneAuth } from './constants';
 
 const HOSTNAME = Cypress.env('BACKEND_HOST') || 'localhost';
 const GUILLOTINA_API_URL = `http://${HOSTNAME}:8081/db/web`;
@@ -10,6 +11,11 @@ const PLONE_API_URL =
 const SLATE_SELECTOR = '.content-area .slate-editor [contenteditable=true]';
 const SLATE_TITLE_SELECTOR = '.block.inner.title [contenteditable="true"]';
 
+const ploneAuthObj = {
+  user: ploneAuth[0],
+  pass: ploneAuth[1],
+};
+
 // --- AUTOLOGIN -------------------------------------------------------------
 Cypress.Commands.add('autologin', (usr, pass) => {
   let api_url, user, password;
@@ -19,8 +25,8 @@ Cypress.Commands.add('autologin', (usr, pass) => {
     password = pass || 'admin';
   } else {
     api_url = PLONE_API_URL;
-    user = usr || 'admin';
-    password = pass || 'secret';
+    user = usr || ploneAuth[0];
+    password = pass || ploneAuth[1];
   }
 
   return cy
@@ -43,6 +49,7 @@ Cypress.Commands.add(
     path = '',
     allow_discussion = false,
     transition = '',
+    bodyModifier = (body) => body,
   }) => {
     let api_url, auth;
     if (Cypress.env('API') === 'guillotina') {
@@ -53,10 +60,7 @@ Cypress.Commands.add(
       };
     } else {
       api_url = PLONE_API_URL;
-      auth = {
-        user: 'admin',
-        pass: 'secret',
-      };
+      auth = ploneAuthObj;
     }
     if (contentType === 'File') {
       return cy.request({
@@ -66,7 +70,7 @@ Cypress.Commands.add(
           Accept: 'application/json',
         },
         auth: auth,
-        body: {
+        body: bodyModifier({
           '@type': contentType,
           id: contentId,
           title: contentTitle,
@@ -77,7 +81,7 @@ Cypress.Commands.add(
             'content-type': 'text/plain',
           },
           allow_discussion: allow_discussion,
-        },
+        }),
       });
     }
     if (contentType === 'Image') {
@@ -88,7 +92,7 @@ Cypress.Commands.add(
           Accept: 'application/json',
         },
         auth: auth,
-        body: {
+        body: bodyModifier({
           '@type': contentType,
           id: contentId,
           title: contentTitle,
@@ -99,7 +103,7 @@ Cypress.Commands.add(
             filename: 'image.png',
             'content-type': 'image/png',
           },
-        },
+        }),
       });
     }
     if (
@@ -113,7 +117,7 @@ Cypress.Commands.add(
             Accept: 'application/json',
           },
           auth: auth,
-          body: {
+          body: bodyModifier({
             '@type': contentType,
             id: contentId,
             title: contentTitle,
@@ -128,7 +132,7 @@ Cypress.Commands.add(
               ],
             },
             allow_discussion: allow_discussion,
-          },
+          }),
         })
         .then(() => {
           if (transition) {
@@ -148,12 +152,12 @@ Cypress.Commands.add(
             Accept: 'application/json',
           },
           auth: auth,
-          body: {
+          body: bodyModifier({
             '@type': contentType,
             id: contentId,
             title: contentTitle,
             allow_discussion: allow_discussion,
-          },
+          }),
         })
         .then(() => {
           if (transition) {
@@ -179,10 +183,7 @@ Cypress.Commands.add('removeContent', ({ path = '' }) => {
     };
   } else {
     api_url = PLONE_API_URL;
-    auth = {
-      user: 'admin',
-      pass: 'secret',
-    };
+    auth = ploneAuthObj;
   }
 
   return cy.request({
@@ -195,14 +196,36 @@ Cypress.Commands.add('removeContent', ({ path = '' }) => {
   });
 });
 
+// Get content
+Cypress.Commands.add('getContent', ({ path = '' }) => {
+  let api_url, auth;
+  if (Cypress.env('API') === 'guillotina') {
+    api_url = GUILLOTINA_API_URL;
+    auth = {
+      user: 'root',
+      pass: 'root',
+    };
+  } else {
+    api_url = PLONE_API_URL;
+    auth = ploneAuthObj;
+  }
+
+  return cy.request({
+    method: 'get',
+    url: `${api_url}/${path}`,
+    headers: {
+      Accept: 'application/json',
+    },
+    auth: auth,
+  });
+});
+
 // --- Add DX Content-Type ----------------------------------------------------------
 Cypress.Commands.add('addContentType', (name) => {
   let api_url, auth;
   api_url = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
-  auth = {
-    user: 'admin',
-    pass: 'secret',
-  };
+  auth = ploneAuthObj;
+
   return cy
     .request({
       method: 'POST',
@@ -222,10 +245,8 @@ Cypress.Commands.add('addContentType', (name) => {
 Cypress.Commands.add('removeContentType', (name) => {
   let api_url, auth;
   api_url = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
-  auth = {
-    user: 'admin',
-    pass: 'secret',
-  };
+  auth = ploneAuthObj;
+
   return cy
     .request({
       method: 'DELETE',
@@ -243,10 +264,8 @@ Cypress.Commands.add('removeContentType', (name) => {
 Cypress.Commands.add('addSlateJSONField', (type, name) => {
   let api_url, auth;
   api_url = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
-  auth = {
-    user: 'admin',
-    pass: 'secret',
-  };
+  auth = ploneAuthObj;
+
   return cy
     .request({
       method: 'POST',
@@ -270,10 +289,8 @@ Cypress.Commands.add('addSlateJSONField', (type, name) => {
 Cypress.Commands.add('removeSlateJSONField', (type, name) => {
   let api_url, auth;
   api_url = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
-  auth = {
-    user: 'admin',
-    pass: 'secret',
-  };
+  auth = ploneAuthObj;
+
   return cy
     .request({
       method: 'DELETE',
@@ -296,7 +313,7 @@ Cypress.Commands.add(
     username = 'editor',
     fullname = 'editor',
     email = 'editor@local.dev',
-    password = 'secret',
+    password = 'password',
     roles = ['Member', 'Reader', 'Editor'],
     groups = {
       '@id': 'http://localhost:3000/@users',
@@ -319,10 +336,7 @@ Cypress.Commands.add(
       path = 'users';
     } else {
       api_url = PLONE_API_URL;
-      auth = {
-        user: 'admin',
-        pass: 'secret',
-      };
+      auth = ploneAuthObj;
       path = '@users';
     }
 
@@ -360,10 +374,7 @@ Cypress.Commands.add('removeUser', (username = 'editor') => {
     path = 'users';
   } else {
     api_url = PLONE_API_URL;
-    auth = {
-      user: 'admin',
-      pass: 'secret',
-    };
+    auth = ploneAuthObj;
     path = '@users';
   }
 
@@ -386,7 +397,7 @@ Cypress.Commands.add(
   ({
     groupname = 'teachers',
     email = 'teachers@local.dev',
-    password = 'secret',
+    password = ploneAuth[1],
     roles = ['Member', 'Reader'],
     users = {
       '@id': 'http://localhost:3000/@groups',
@@ -404,10 +415,7 @@ Cypress.Commands.add(
       path = 'groups';
     } else {
       api_url = PLONE_API_URL;
-      auth = {
-        user: 'admin',
-        pass: 'secret',
-      };
+      auth = ploneAuthObj;
       path = '@groups';
     }
 
@@ -448,10 +456,7 @@ Cypress.Commands.add(
   }) => {
     let api_url, auth;
     api_url = PLONE_API_URL;
-    auth = {
-      user: 'admin',
-      pass: 'secret',
-    };
+    auth = ploneAuthObj;
     return cy.request({
       method: 'POST',
       url: `${api_url}/${path}/@workflow/${review_state}`,
@@ -514,10 +519,7 @@ Cypress.Commands.add('waitForResourceToLoad', (fileName, type) => {
 Cypress.Commands.add('setRegistry', (record, value) => {
   let api_url, auth;
   api_url = PLONE_API_URL;
-  auth = {
-    user: 'admin',
-    pass: 'secret',
-  };
+  auth = ploneAuthObj;
 
   return cy.request({
     method: 'PATCH',
@@ -612,7 +614,7 @@ Cypress.Commands.add(
   (query, htmlContent) => {
     return cy
       .wrap(query)
-      .type(' ')
+      .type(' {backspace}')
       .trigger('paste', createHtmlPasteEvent(htmlContent));
   },
 );
@@ -703,7 +705,7 @@ Cypress.Commands.add('lineBreakInSlate', { prevSubject: true }, (subject) => {
 Cypress.Commands.add('setSlateSelection', (subject, query, endQuery) => {
   cy.get('.slate-editor.selected [contenteditable=true]')
     .focus()
-    .click()
+    // .click()
     .setSelection(subject, query, endQuery)
     .wait(1000); // this wait is needed for the selection change to be detected after
 });
@@ -722,8 +724,8 @@ Cypress.Commands.add('setSlateCursor', (subject, query, endQuery) => {
 
 Cypress.Commands.add('clickSlateButton', (button) => {
   cy.get(`.slate-inline-toolbar .button-wrapper a[title="${button}"]`, {
-    timeout: 10000,
-  }).click({ force: true }); //force click is needed to ensure the button in visible in view.
+    timeout: 1000,
+  }).click({ force: true }); // force click is needed to ensure the button in visible in view.
 });
 
 // Helper functions
