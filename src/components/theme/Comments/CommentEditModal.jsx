@@ -3,11 +3,10 @@
  * @module components/theme/Comments/CommentEditModal
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { updateComment } from '@plone/volto/actions';
 import { ModalForm } from '@plone/volto/components';
@@ -28,61 +27,21 @@ const messages = defineMessages({
 });
 
 /**
- * CommentEditModal class.
- * @class CommentEditModal
- * @extends Component
+ * CommentEditModal functional component.
+ * @function CommentEditModal
+ * @param {Object} props Component properties
+ * @returns {string} Markup for the component.
  */
-class CommentEditModal extends Component {
-  /**
-   * Property types.
-   * @property {Object} propTypes Property types.
-   * @static
-   */
-  static propTypes = {
-    updateComment: PropTypes.func.isRequired,
-    id: PropTypes.string,
-    text: PropTypes.string,
-    request: PropTypes.shape({
-      loading: PropTypes.bool,
-      loaded: PropTypes.bool,
-    }).isRequired,
-    open: PropTypes.bool.isRequired,
-    onOk: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-  };
+const CommentEditModal = ({ id = '', text = '', open, onOk, onCancel }) => {
+  const intl = useIntl();
+  const dispatch = useDispatch();
+  const request = useSelector((state) => state.comments.update);
 
-  /**
-   * Default properties.
-   * @property {Object} defaultProps Default properties.
-   * @static
-   */
-  static defaultProps = {
-    id: '',
-    text: '',
-  };
-
-  /**
-   * Constructor
-   * @method constructor
-   * @param {Object} props Component properties
-   * @constructs CommentEditModal
-   */
-  constructor(props) {
-    super(props);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  /**
-   * Component will receive props
-   * @method componentWillReceiveProps
-   * @param {Object} nextProps Next properties
-   * @returns {undefined}
-   */
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.request.loading && nextProps.request.loaded) {
-      this.props.onOk();
+  useEffect(() => {
+    if (request.loading === false && request.loaded === true) {
+      onOk();
     }
-  }
+  }, [request, onOk]);
 
   /**
    * Submit handler
@@ -90,53 +49,50 @@ class CommentEditModal extends Component {
    * @param {Object} data Form data
    * @returns {undefined}
    */
-  onSubmit(data) {
-    this.props.updateComment(this.props.id, data.text);
-  }
+  const onSubmit = (data) => {
+    dispatch(updateComment(id, data.text));
+  };
 
-  /**
-   * Render method.
-   * @method render
-   * @returns {string} Markup for the component.
-   */
-  render() {
-    return (
-      this.props.open && (
-        <ModalForm
-          open={this.props.open}
-          onSubmit={this.onSubmit}
-          onCancel={this.props.onCancel}
-          formData={{ text: this.props.text }}
-          title={this.props.intl.formatMessage(messages.editComment)}
-          schema={{
-            fieldsets: [
-              {
-                id: 'default',
-                title: this.props.intl.formatMessage(messages.default),
-                fields: ['text'],
-              },
-            ],
-            properties: {
-              text: {
-                title: this.props.intl.formatMessage(messages.comment),
-                type: 'string',
-                description: '',
-              },
+  return (
+    open && (
+      <ModalForm
+        open={open}
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        formData={{ text }}
+        title={intl.formatMessage(messages.editComment)}
+        schema={{
+          fieldsets: [
+            {
+              id: 'default',
+              title: intl.formatMessage(messages.default),
+              fields: ['text'],
             },
-            required: ['text'],
-          }}
-        />
-      )
-    );
-  }
-}
+          ],
+          properties: {
+            text: {
+              title: intl.formatMessage(messages.comment),
+              type: 'string',
+              description: '',
+            },
+          },
+          required: ['text'],
+        }}
+      />
+    )
+  );
+};
 
-export default compose(
-  injectIntl,
-  connect(
-    (state) => ({
-      request: state.comments.update,
-    }),
-    { updateComment },
-  ),
-)(CommentEditModal);
+/**
+ * Property types.
+ * @property {Object} propTypes Property types.
+ */
+CommentEditModal.propTypes = {
+  id: PropTypes.string,
+  text: PropTypes.string,
+  open: PropTypes.bool.isRequired,
+  onOk: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
+
+export default CommentEditModal;
