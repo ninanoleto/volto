@@ -12,10 +12,12 @@ import {
   Segment,
   Grid,
 } from 'semantic-ui-react';
-import { FormattedMessage, 
-         defineMessages, 
-         injectIntl, 
-         useIntl } from 'react-intl';
+import {
+  FormattedMessage,
+  defineMessages,
+  injectIntl,
+  useIntl,
+} from 'react-intl';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 
@@ -59,7 +61,7 @@ const messages = defineMessages({
     defaultMessage: 'Login Failed',
   },
   loginFailedContent: {
-    id:
+    id: 
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
     defaultMessage:
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
@@ -90,7 +92,7 @@ const Login = (props) => {
 
   useEffect(() => {
     if (token) {
-        history.push(returnUrl || '/');
+      history.push(returnUrl || '/');
       if (toast.isActive('loggedOut')) {
         toast.dismiss('loggedOut');
       }
@@ -118,9 +120,7 @@ const Login = (props) => {
         toast.dismiss('loginFailed');
       }
     };
-  }, [token, error,]);
-
-
+  }, [token, error, returnUrl]);
 
   const onLogin = (e) => {
     dispatch(
@@ -165,9 +165,7 @@ const Login = (props) => {
                       <Input
                         id="login"
                         name="login"
-                        placeholder={intl.formatMessage(
-                          messages.loginName,
-                        )}
+                        placeholder={intl.formatMessage(messages.loginName)}
                         autoFocus
                       />
                     </Grid.Column>
@@ -192,9 +190,7 @@ const Login = (props) => {
                         type="password"
                         id="password"
                         name="password"
-                        placeholder={intl.formatMessage(
-                          messages.password,
-                        )}
+                        placeholder={intl.formatMessage(messages.password)}
                         tabIndex={0}
                       />
                     </Grid.Column>
