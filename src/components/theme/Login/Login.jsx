@@ -57,10 +57,10 @@ const messages = defineMessages({
     defaultMessage: 'Login Failed',
   },
   loginFailedContent: {
-    id: 
-         'Both email address and password are case sensitive, check that caps lock is not enabled.',
-    defaultMessage: 
-         'Both email address and password are case sensitive, check that caps lock is not enabled.',
+    id:
+      'Both email address and password are case sensitive, check that caps lock is not enabled.',
+    defaultMessage:
+      'Both email address and password are case sensitive, check that caps lock is not enabled.',
   },
   register: {
     id: 'Register',
@@ -73,7 +73,7 @@ const messages = defineMessages({
 });
 
 const Login = (props) => {
-  //dispatch left
+  
   const dispatch = useDispatch();
   const error = useSelector((state) => state.userSession.login.error);
   const loading = useSelector((state) => state.userSession.login.loading);
@@ -85,7 +85,6 @@ const Login = (props) => {
       .replace(/\/logout\/?$/, '') ||
     '/';
 
-  //replace componentwillreceiveprops
   useEffect(() => {
     console.log('use effect receive props on update');
     if (token) {
@@ -120,20 +119,6 @@ const Login = (props) => {
     };
   }, [token, error]);
 
-  /**
-   * On login handler
-   * @method onLogin
-   * @param {Object} event Event object.
-   * @returns {undefined}
-   */
-  // onLogin(event) {
-  //   console.log("receive login cred");
-  //   this.props.login(
-  //     document.getElementsByName('login')[0].value,
-  //     document.getElementsByName('password')[0].value,
-  //   );
-  //   event.preventDefault();
-  // }
 
   const onLogin = (e) => {
     console.log('login action creator dispatched');
