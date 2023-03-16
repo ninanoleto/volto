@@ -1,14 +1,7 @@
-
-/**
- * Login container.
- * @module components/theme/Login/Login
- */
-
-import React ,{useEffect} from 'react';
-import PropTypes from 'prop-types';
+import React , { useEffect } from 'react';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
-import { useSelector ,useDispatch} from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
 import {
@@ -78,8 +71,7 @@ const messages = defineMessages({
   },
 });
 
-const Login=(props)=>{
-
+const Login = ( props ) => {
     const dispatch = useDispatch();
     const error = useSelector((state) => state.userSession.login.error);
     const loading = useSelector((state) => state.userSession.login.loading);
@@ -87,14 +79,9 @@ const Login=(props)=>{
     const returnUrl= qs.parse(props.location.search).return_url ||
           props.location.pathname
             .replace(/\/login\/?$/, '')
-            .replace(/\/logout\/?$/, '') ||
-          '/'
+            .replace(/\/logout\/?$/, '') ||'/'
 
-
-
-          //replace componentwillreceiveprops 
           useEffect( () => {
-            
                console.log("use effect receive props on update");
             if (token) {
                  props.history.push(returnUrl || '/');
@@ -135,9 +122,7 @@ const Login=(props)=>{
    * @param {Object} event Event object.
    * @returns {undefined}
    */
-
-  
-  const onLogin=(e)=>{
+  const onLogin = ( e ) => {
      console.log("login action creator dispatched");
      dispatch(login(
       document.getElementsByName('login')[0].value,
@@ -283,5 +268,4 @@ const Login=(props)=>{
 export default compose(
   withRouter,
   injectIntl,
- 
 )(Login);
