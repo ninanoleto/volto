@@ -61,7 +61,7 @@ const messages = defineMessages({
     defaultMessage: 'Login Failed',
   },
   loginFailedContent: {
-    id: 
+    id:
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
     defaultMessage:
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
@@ -120,7 +120,7 @@ const Login = (props) => {
         toast.dismiss('loginFailed');
       }
     };
-  }, [token, error, returnUrl]);
+  }, [token, error, returnUrl,history,intl]);
 
   const onLogin = (e) => {
     dispatch(
@@ -166,7 +166,6 @@ const Login = (props) => {
                         id="login"
                         name="login"
                         placeholder={intl.formatMessage(messages.loginName)}
-                        autoFocus
                       />
                     </Grid.Column>
                   </Grid.Row>
