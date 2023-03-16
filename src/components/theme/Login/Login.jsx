@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
 import { useSelector, useDispatch } from 'react-redux';
@@ -85,7 +84,6 @@ const Login = (props) => {
     '/';
 
   useEffect(() => {
-    console.log('use effect receive props on update');
     if (token) {
       props.history.push(returnUrl || '/');
       if (toast.isActive('loggedOut')) {
@@ -111,7 +109,6 @@ const Login = (props) => {
       }
     }
     return () => {
-      console.log('unmount return effect');
       if (toast.isActive('loginFailed')) {
         toast.dismiss('loginFailed');
       }
@@ -119,7 +116,6 @@ const Login = (props) => {
   }, [token, error]);
 
   const onLogin = (e) => {
-    console.log('login action creator dispatched');
     dispatch(
       login(
         document.getElementsByName('login')[0].value,
