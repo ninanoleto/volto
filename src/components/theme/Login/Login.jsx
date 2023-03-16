@@ -1,7 +1,7 @@
-import React , { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
-import { useSelector , useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
 import {
@@ -72,33 +72,33 @@ const messages = defineMessages({
 });
 
 const Login = (props) => {
-    const dispatch = useDispatch();
-    const error = useSelector((state) => state.userSession.login.error);
-    const loading = useSelector((state) => state.userSession.login.loading);
-    const token = useSelector((state) => state.userSession.token);
-    const returnUrl =
-          qs.parse(props.location.search).return_url ||
-          props.location.pathname
-            .replace(/\/login\/?$/, '')
-            .replace(/\/logout\/?$/, '') ||'/'
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.userSession.login.error);
+  const loading = useSelector((state) => state.userSession.login.loading);
+  const token = useSelector((state) => state.userSession.token);
+  const returnUrl =
+        qs.parse(props.location.search).return_url ||
+        props.location.pathname
+        .replace(/\/login\/?$/, '')
+        .replace(/\/logout\/?$/, '') ||'/'
 
-          useEffect( () => {
-               console.log("use effect receive props on update");
-            if (token) {
-                 props.history.push(returnUrl || '/');
-              if (toast.isActive('loggedOut')) {
-                toast.dismiss('loggedOut');
-              }
-              if (toast.isActive('loginFailed')) {
-                toast.dismiss('loginFailed');
-              }
-            }
-            if (error) {
-              if (toast.isActive('loggedOut')) {
-                toast.dismiss('loggedOut');
-              }
-              if (!toast.isActive('loginFailed')) {
-                toast.error(
+  useEffect(() => {
+               //console.log("use effect receive props on update");
+        if (token) {
+        props.history.push(returnUrl || '/');
+        if (toast.isActive('loggedOut')) {
+        toast.dismiss('loggedOut');
+        }
+        if (toast.isActive('loginFailed')) {
+        toast.dismiss('loginFailed');
+        }
+        }
+        if (error) {
+        if (toast.isActive('loggedOut')) {
+        toast.dismiss('loggedOut');
+        }
+        if (!toast.isActive('loginFailed')) {
+        toast.error(
                   <Toast
                     error
                     title={props.intl.formatMessage(messages.loginFailed)}
@@ -256,5 +256,5 @@ const Login = (props) => {
       </Container>
     </div>
   );
-}
-export default compose(withRouter,injectIntl)(Login);
+};
+  export default compose(withRouter,injectIntl)(Login);
