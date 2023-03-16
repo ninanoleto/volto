@@ -57,8 +57,10 @@ const messages = defineMessages({
     defaultMessage: 'Login Failed',
   },
   loginFailedContent: {
-    id: 'Both email address and password are case sensitive, check that caps lock is not enabled.',
-    defaultMessage: 'Both email address and password are case sensitive, check that caps lock is not enabled.',
+    id: 
+         'Both email address and password are case sensitive, check that caps lock is not enabled.',
+    defaultMessage: 
+         'Both email address and password are case sensitive, check that caps lock is not enabled.',
   },
   register: {
     id: 'Register',
