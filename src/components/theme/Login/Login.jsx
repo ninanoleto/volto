@@ -82,7 +82,7 @@ const Login = (props) => {
       .replace(/\/login\/?$/, '')
       .replace(/\/logout\/?$/, '') ||
     '/';
-// eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (token) {
       props.history.push(returnUrl || '/');
