@@ -120,7 +120,7 @@ const Login = (props) => {
         toast.dismiss('loginFailed');
       }
     };
-  }, [token, error, returnUrl,history,intl]);
+  }, [token, error, returnUrl, history, intl]);
 
   const onLogin = (e) => {
     dispatch(
