@@ -256,12 +256,5 @@ const Login = (props) => {
       </Container>
     </div>
   );
-   
-
 }
-
-
-export default compose(
-  withRouter,
-  injectIntl,
-)(Login);
+export default compose(withRouter,injectIntl)(Login);
