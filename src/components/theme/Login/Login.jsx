@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
@@ -56,8 +57,7 @@ const messages = defineMessages({
     defaultMessage: 'Login Failed',
   },
   loginFailedContent: {
-    id:
-      'Both email address and password are case sensitive, check that caps lock is not enabled.',
+    id: 'Both email address and password are case sensitive, check that caps lock is not enabled.',
     defaultMessage:
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
   },
@@ -72,64 +72,78 @@ const messages = defineMessages({
 });
 
 const Login = (props) => {
+  //dispatch left
   const dispatch = useDispatch();
   const error = useSelector((state) => state.userSession.login.error);
   const loading = useSelector((state) => state.userSession.login.loading);
   const token = useSelector((state) => state.userSession.token);
   const returnUrl =
-        qs.parse(props.location.search).return_url ||
-        props.location.pathname
-        .replace(/\/login\/?$/, '')
-        .replace(/\/logout\/?$/, '') ||'/'
+    qs.parse(props.location.search).return_url ||
+    props.location.pathname
+      .replace(/\/login\/?$/, '')
+      .replace(/\/logout\/?$/, '') ||
+    '/';
 
+  //replace componentwillreceiveprops
   useEffect(() => {
-               //console.log("use effect receive props on update");
-        if (token) {
-        props.history.push(returnUrl || '/');
-        if (toast.isActive('loggedOut')) {
+    console.log('use effect receive props on update');
+    if (token) {
+      props.history.push(returnUrl || '/');
+      if (toast.isActive('loggedOut')) {
         toast.dismiss('loggedOut');
-        }
-        if (toast.isActive('loginFailed')) {
+      }
+      if (toast.isActive('loginFailed')) {
         toast.dismiss('loginFailed');
-        }
-        }
-        if (error) {
-        if (toast.isActive('loggedOut')) {
+      }
+    }
+    if (error) {
+      if (toast.isActive('loggedOut')) {
         toast.dismiss('loggedOut');
-        }
-        if (!toast.isActive('loginFailed')) {
+      }
+      if (!toast.isActive('loginFailed')) {
         toast.error(
-                  <Toast
-                    error
-                    title={props.intl.formatMessage(messages.loginFailed)}
-                    content={props.intl.formatMessage(messages.loginFailedContent)}
-                  />,
-                  { autoClose: false, toastId: 'loginFailed' },
-                );
-              }
-            }
-            return ()=> {
-              console.log("unmount return effect");
-                if (toast.isActive('loginFailed')) {
-                  toast.dismiss('loginFailed');
-                }
-};
-        }, [token,error])
-     
+          <Toast
+            error
+            title={props.intl.formatMessage(messages.loginFailed)}
+            content={props.intl.formatMessage(messages.loginFailedContent)}
+          />,
+          { autoClose: false, toastId: 'loginFailed' },
+        );
+      }
+    }
+    return () => {
+      console.log('unmount return effect');
+      if (toast.isActive('loginFailed')) {
+        toast.dismiss('loginFailed');
+      }
+    };
+  }, [token, error]);
+
   /**
    * On login handler
    * @method onLogin
    * @param {Object} event Event object.
    * @returns {undefined}
    */
-  const onLogin = ( e ) => {
-     console.log("login action creator dispatched");
-     dispatch(login(
-      document.getElementsByName('login')[0].value,
-      document.getElementsByName('password')[0].value,
-    ));
-    e.preventDefault(); 
-  }
+  // onLogin(event) {
+  //   console.log("receive login cred");
+  //   this.props.login(
+  //     document.getElementsByName('login')[0].value,
+  //     document.getElementsByName('password')[0].value,
+  //   );
+  //   event.preventDefault();
+  // }
+
+  const onLogin = (e) => {
+    console.log('login action creator dispatched');
+    dispatch(
+      login(
+        document.getElementsByName('login')[0].value,
+        document.getElementsByName('password')[0].value,
+      ),
+    );
+    e.preventDefault();
+  };
 
   return (
     <div id="page-login">
@@ -165,7 +179,9 @@ const Login = (props) => {
                       <Input
                         id="login"
                         name="login"
-                        placeholder={props.intl.formatMessage(messages.loginName)}
+                        placeholder={props.intl.formatMessage(
+                          messages.loginName,
+                        )}
                         autoFocus
                       />
                     </Grid.Column>
@@ -190,7 +206,9 @@ const Login = (props) => {
                         type="password"
                         id="password"
                         name="password"
-                        placeholder={props.intl.formatMessage(messages.password)}
+                        placeholder={props.intl.formatMessage(
+                          messages.password,
+                        )}
                         tabIndex={0}
                       />
                     </Grid.Column>
@@ -212,9 +230,7 @@ const Login = (props) => {
                     <Grid.Column stretched width="12">
                       <p className="help">
                         <Link to="/passwordreset">
-                          {props.intl.formatMessage(
-                            messages.forgotPassword,
-                          )}
+                          {props.intl.formatMessage(messages.forgotPassword)}
                         </Link>
                       </p>
                     </Grid.Column>
@@ -257,4 +273,5 @@ const Login = (props) => {
     </div>
   );
 };
-  export default compose(withRouter,injectIntl)(Login);
+
+export default compose(withRouter, injectIntl)(Login);
