@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import {
   Container,
@@ -12,7 +12,7 @@ import {
   Segment,
   Grid,
 } from 'semantic-ui-react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl, useIntl } from 'react-intl';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 
@@ -56,9 +56,9 @@ const messages = defineMessages({
     defaultMessage: 'Login Failed',
   },
   loginFailedContent: {
-    id:
+    id: 
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
-    defaultMessage:
+    defaultMessage: 
       'Both email address and password are case sensitive, check that caps lock is not enabled.',
   },
   register: {
@@ -73,6 +73,8 @@ const messages = defineMessages({
 
 const Login = (props) => {
   const dispatch = useDispatch();
+  const intl = useIntl();
+  let history = useHistory();
   const error = useSelector((state) => state.userSession.login.error);
   const loading = useSelector((state) => state.userSession.login.loading);
   const token = useSelector((state) => state.userSession.token);
@@ -85,7 +87,7 @@ const Login = (props) => {
 
   useEffect(() => {
     if (token) {
-      props.history.push(returnUrl || '/');
+        history.push(returnUrl || '/');
       if (toast.isActive('loggedOut')) {
         toast.dismiss('loggedOut');
       }
@@ -101,8 +103,8 @@ const Login = (props) => {
         toast.error(
           <Toast
             error
-            title={props.intl.formatMessage(messages.loginFailed)}
-            content={props.intl.formatMessage(messages.loginFailedContent)}
+            title={intl.formatMessage(messages.loginFailed)}
+            content={intl.formatMessage(messages.loginFailedContent)}
           />,
           { autoClose: false, toastId: 'loginFailed' },
         );
@@ -113,7 +115,9 @@ const Login = (props) => {
         toast.dismiss('loginFailed');
       }
     };
-  }, [token, error]);
+  }, [token, error,]);
+
+
 
   const onLogin = (e) => {
     dispatch(
@@ -127,7 +131,7 @@ const Login = (props) => {
 
   return (
     <div id="page-login">
-      <Helmet title={props.intl.formatMessage(messages.Login)} />
+      <Helmet title={intl.formatMessage(messages.Login)} />
       <Container text>
         <Form method="post" onSubmit={onLogin}>
           <Segment.Group raised>
@@ -155,11 +159,10 @@ const Login = (props) => {
                       </div>
                     </Grid.Column>
                     <Grid.Column width="8">
-                      {/* eslint-disable jsx-a11y/no-autofocus */}
                       <Input
                         id="login"
                         name="login"
-                        placeholder={props.intl.formatMessage(
+                        placeholder={intl.formatMessage(
                           messages.loginName,
                         )}
                         autoFocus
@@ -186,7 +189,7 @@ const Login = (props) => {
                         type="password"
                         id="password"
                         name="password"
-                        placeholder={props.intl.formatMessage(
+                        placeholder={intl.formatMessage(
                           messages.password,
                         )}
                         tabIndex={0}
@@ -202,7 +205,7 @@ const Login = (props) => {
                       <Grid.Column stretched width="12">
                         <p className="help">
                           <Link to="/register">
-                            {props.intl.formatMessage(messages.register)}
+                            {intl.formatMessage(messages.register)}
                           </Link>
                         </p>
                       </Grid.Column>
@@ -210,7 +213,7 @@ const Login = (props) => {
                     <Grid.Column stretched width="12">
                       <p className="help">
                         <Link to="/passwordreset">
-                          {props.intl.formatMessage(messages.forgotPassword)}
+                          {intl.formatMessage(messages.forgotPassword)}
                         </Link>
                       </p>
                     </Grid.Column>
@@ -226,8 +229,8 @@ const Login = (props) => {
                 floated="right"
                 type="submit"
                 id="login-form-submit"
-                aria-label={props.intl.formatMessage(messages.login)}
-                title={props.intl.formatMessage(messages.login)}
+                aria-label={intl.formatMessage(messages.login)}
+                title={intl.formatMessage(messages.login)}
                 loading={loading}
               >
                 <Icon className="circled" name={aheadSVG} size="30px" />
@@ -241,8 +244,8 @@ const Login = (props) => {
                 id="login-form-cancel"
                 as={Link}
                 to="/"
-                aria-label={props.intl.formatMessage(messages.cancel)}
-                title={props.intl.formatMessage(messages.cancel)}
+                aria-label={intl.formatMessage(messages.cancel)}
+                title={intl.formatMessage(messages.cancel)}
               >
                 <Icon className="circled" name={clearSVG} size="30px" />
               </Button>
