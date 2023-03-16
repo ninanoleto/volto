@@ -73,7 +73,6 @@ const messages = defineMessages({
 });
 
 const Login = (props) => {
-  
   const dispatch = useDispatch();
   const error = useSelector((state) => state.userSession.login.error);
   const loading = useSelector((state) => state.userSession.login.loading);
@@ -118,7 +117,6 @@ const Login = (props) => {
       }
     };
   }, [token, error]);
-
 
   const onLogin = (e) => {
     console.log('login action creator dispatched');
