@@ -1,7 +1,7 @@
 import React , { useEffect } from 'react';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
-import { useSelector ,useDispatch } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
 import {
@@ -109,12 +109,11 @@ const Login = (props) => {
               }
             }
             return ()=> {
-
               console.log("unmount return effect");
                 if (toast.isActive('loginFailed')) {
                   toast.dismiss('loginFailed');
                 }
-            };
+};
         }, [token,error])
      
   /**
