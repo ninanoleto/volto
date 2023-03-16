@@ -1,7 +1,7 @@
 import React , { useEffect } from 'react';
 import { Helmet } from '@plone/volto/helpers';
 import { compose } from 'redux';
-import { useSelector , useDispatch } from 'react-redux'
+import { useSelector ,useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
 import {
@@ -71,12 +71,13 @@ const messages = defineMessages({
   },
 });
 
-const Login = ( props ) => {
+const Login = (props) => {
     const dispatch = useDispatch();
     const error = useSelector((state) => state.userSession.login.error);
     const loading = useSelector((state) => state.userSession.login.loading);
-    const token= useSelector((state) => state.userSession.token);
-    const returnUrl= qs.parse(props.location.search).return_url ||
+    const token = useSelector((state) => state.userSession.token);
+    const returnUrl =
+          qs.parse(props.location.search).return_url ||
           props.location.pathname
             .replace(/\/login\/?$/, '')
             .replace(/\/logout\/?$/, '') ||'/'
@@ -165,9 +166,7 @@ const Login = ( props ) => {
                       <Input
                         id="login"
                         name="login"
-                        placeholder={props.intl.formatMessage(
-                          messages.loginName,
-                        )}
+                        placeholder={props.intl.formatMessage(messages.loginName)}
                         autoFocus
                       />
                     </Grid.Column>
@@ -192,9 +191,7 @@ const Login = ( props ) => {
                         type="password"
                         id="password"
                         name="password"
-                        placeholder={props.intl.formatMessage(
-                          messages.password,
-                        )}
+                        placeholder={props.intl.formatMessage(messages.password)}
                         tabIndex={0}
                       />
                     </Grid.Column>
