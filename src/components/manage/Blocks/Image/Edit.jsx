@@ -41,6 +41,10 @@ const messages = defineMessages({
     id: 'Browse the site, drop an image, or type an URL',
     defaultMessage: 'Browse the site, drop an image, or type an URL',
   },
+  uploadingImage: {
+    id: 'Uploading image',
+    defaultMessage: 'Uploading image',
+  },
 });
 
 /**
@@ -293,7 +297,11 @@ class Edit extends Component {
                       {this.state.dragging && <Dimmer active></Dimmer>}
                       {this.state.uploading && (
                         <Dimmer active>
-                          <Loader indeterminate>Uploading image</Loader>
+                          <Loader indeterminate>
+                            {this.props.intl.formatMessage(
+                              messages.uploadingImage,
+                            )}
+                          </Loader>
                         </Dimmer>
                       )}
                       <div className="no-image-wrapper">

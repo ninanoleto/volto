@@ -31,7 +31,6 @@ export {
   URLUtils,
   addPrefixPath,
 } from '@plone/volto/helpers/Url/Url';
-export { generateSitemap } from '@plone/volto/helpers/Sitemap/Sitemap';
 export { generateRobots } from '@plone/volto/helpers/Robots/Robots';
 export {
   nestContent,
@@ -57,6 +56,8 @@ export {
   applyBlockDefaults,
   applySchemaDefaults,
   buildStyleClassNamesFromData,
+  buildStyleClassNamesExtenders,
+  getPreviousNextBlock,
 } from '@plone/volto/helpers/Blocks/Blocks';
 export BodyClass from '@plone/volto/helpers/BodyClass/BodyClass';
 export ScrollToTop from '@plone/volto/helpers/ScrollToTop/ScrollToTop';
@@ -80,11 +81,16 @@ export {
   applyConfig,
   withServerErrorCode,
   parseDateTime,
-  normalizeLanguageName,
-  toLangUnderscoreRegion,
+  toGettextLang,
+  normalizeLanguageName, // old name for toGettextLang
+  toReactIntlLang,
+  toLangUnderscoreRegion, // old name for toReactIntlLang
+  toBackendLang,
   hasApiExpander,
   replaceItemOfArray,
   cloneDeepSchema,
+  arrayRange,
+  reorderArray,
 } from '@plone/volto/helpers/Utils/Utils';
 export { messages } from './MessageLabels/MessageLabels';
 export {
